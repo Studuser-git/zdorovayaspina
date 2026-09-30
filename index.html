@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Опора — детская ЛФК</title>
+<meta name="description" content="Домашние тренировки лечебной физкультуры для детей 5–18 лет: спина и ноги, таймер, схемы упражнений и дневник занятий.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: липкая навигация → каталог (возраст × зона → карточки программ) → дневник → безопасность; таймер — полноэкранный слой. */
+/* Палитра «кинезио-тейп»: синий — спина, коралловый — ноги, прохладный светлый фон. */
+:root{
+  --bg:#EDF2F6; --surface:#FFFFFF; --surface-2:#F5F8FB; --ink:#14202B; --muted:#566575; --line:#D3DDE6;
+  --back:#2563D9; --back-soft:#DCE7FB; --legs:#D9492F; --legs-soft:#FCE1DB; --on-accent:#FFFFFF;
+  --fig-far:#9AA8B6; --prop:#B8C4D0;
+  --ok:#1E8A5A; --ok-soft:#DDF2E7; --warn:#9A5B00; --warn-soft:#FFF1D6; --danger:#C0302A; --danger-soft:#FBE0DE;
+  --z:var(--back); --z-soft:var(--back-soft);
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Nunito","Segoe UI",system-ui,-apple-system,sans-serif;
+  --r:14px; --shadow:0 1px 2px rgba(20,32,43,.06),0 6px 20px rgba(20,32,43,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E151C; --surface:#16202A; --surface-2:#1C2833; --ink:#E4ECF3; --muted:#93A3B3; --line:#2A3845;
+    --back:#7AA5FF; --back-soft:#1D2D4D; --legs:#FF8A75; --legs-soft:#43231F; --on-accent:#0E151C;
+    --fig-far:#55667A; --prop:#3A4A5A;
+    --ok:#4CC38A; --ok-soft:#16352A; --warn:#F2B64B; --warn-soft:#3A2C12; --danger:#FF7A70; --danger-soft:#3E1D1B;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E151C; --surface:#16202A; --surface-2:#1C2833; --ink:#E4ECF3; --muted:#93A3B3; --line:#2A3845;
+  --back:#7AA5FF; --back-soft:#1D2D4D; --legs:#FF8A75; --legs-soft:#43231F; --on-accent:#0E151C;
+  --fig-far:#55667A; --prop:#3A4A5A;
+  --ok:#4CC38A; --ok-soft:#16352A; --warn:#F2B64B; --warn-soft:#3A2C12; --danger:#FF7A70; --danger-soft:#3E1D1B;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--f-body);-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+ul,ol{margin:0;padding:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--z);outline-offset:2px;border-radius:6px}
+.z-back{--z:var(--back);--z-soft:var(--back-soft)}
+.z-legs{--z:var(--legs);--z-soft:var(--legs-soft)}
+.wrap{max-width:1100px;margin-inline:auto;padding-inline:16px}
+@media (min-width:720px){.wrap{padding-inline:28px}}
+
+/* Навигация */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:12px;min-height:60px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:700 20px/1 var(--f-display);margin-right:auto}
+.mark{position:relative;width:28px;height:28px;flex:none}
+.mark i{position:absolute;left:1px;top:11px;width:26px;height:7px;border-radius:4px}
+.mark i:first-child{background:var(--back);transform:rotate(-38deg)}
+.mark i:last-child{background:var(--legs);transform:rotate(38deg);opacity:.92}
+.nav nav{display:flex;gap:2px}
+.nav nav a{color:var(--muted);text-decoration:none;font-weight:700;padding:8px 10px;border-radius:10px;font-size:15px}
+.nav nav a:hover{color:var(--ink);background:var(--surface)}
+
+/* Hero */
+.hero{padding-block:36px 8px;display:grid;gap:28px;grid-template-columns:1fr}
+@media (min-width:880px){.hero{grid-template-columns:1.1fr .9fr;align-items:center;padding-block:52px 12px}}
+.hero h1{font-size:clamp(28px,5vw,46px);letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--back)}
+.hero h1 em + em{color:var(--legs)}
+.lead{margin-top:14px;font-size:18px;color:var(--muted);max-width:56ch}
+.disclaimer{margin-top:22px;display:flex;gap:12px;align-items:flex-start;background:var(--warn-soft);color:var(--ink);border-radius:var(--r);padding:14px 16px;max-width:60ch}
+.disclaimer b{color:var(--warn)}
+.disclaimer svg{flex:none;margin-top:2px;color:var(--warn)}
+.hero-art{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero-art figure{margin:0;background:var(--surface);border-radius:18px;padding:14px 14px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero-art figure::before{content:"";position:absolute;inset:auto -20% 0 -20%;height:6px;background:var(--z);opacity:.85}
+.hero-art figcaption{font-size:13px;font-weight:700;color:var(--muted);display:flex;justify-content:space-between;gap:8px;margin-top:4px}
+.hero-art figcaption b{color:var(--z);text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+
+/* Разделы */
+section.block{padding-block:40px}
+.sec-h{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px;margin-bottom:20px}
+.sec-h h2{font-size:clamp(22px,3.4vw,30px)}
+.sec-h p{color:var(--muted);max-width:60ch}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--z)}
+
+/* Переключатели */
+.controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-bottom:10px}
+.ctl{display:flex;flex-direction:column;gap:6px}
+.ctl-l{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:8px 14px;border-radius:9px;font-weight:800;cursor:pointer;color:var(--muted);font-variant-numeric:tabular-nums}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--z);color:var(--on-accent)}
+.seg button[data-zone-btn="back"]{--z:var(--back)}
+.seg button[data-zone-btn="legs"]{--z:var(--legs)}
+.age-note{color:var(--muted);font-size:15px;margin-bottom:22px}
+.age-note b{color:var(--ink)}
+
+/* Карточки программ */
+.programs{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.card-h{padding:20px 20px 16px;border-top:6px solid var(--z);display:flex;flex-direction:column;gap:8px}
+.card h3{font-size:22px}
+.real{color:var(--muted);font-weight:700;margin-top:-4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;list-style:none}
+.chips li{background:var(--z-soft);color:var(--ink);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700}
+.card-note{font-size:14px;color:var(--warn);font-weight:700}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.meta span:first-child{color:var(--ink)}
+.ex-list{list-style:none;border-top:1px solid var(--line);flex:1}
+.ex-list li{border-bottom:1px solid var(--line)}
+.ex-list summary{list-style:none;display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:8px 20px 8px 14px;cursor:pointer}
+.ex-list summary::-webkit-details-marker{display:none}
+.ex-list summary:hover{background:var(--surface-2)}
+.ex-list .fig{width:64px;height:43px;background:var(--surface-2);border-radius:8px}
+.ex-name{min-width:0}
+.ex-name b{display:block;font-weight:800;line-height:1.25}
+.ex-name small{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.dose{font-weight:800;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dose small{display:block;color:var(--muted);font-weight:600;font-size:12px}
+.ex-body{padding:4px 20px 16px 90px;font-size:15px}
+.ex-body ol{padding-left:18px;display:grid;gap:2px}
+.cue{margin-top:8px;background:var(--z-soft);border-radius:10px;padding:6px 10px;font-size:14px}
+.cue b{color:var(--z)}
+.ex.off summary{cursor:default;opacity:.55}
+.off-tag{font-size:12px;font-weight:800;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.card-actions{display:flex;flex-wrap:wrap;gap:10px;padding:16px 20px 20px}
+@media (max-width:480px){.ex-body{padding-left:20px}.ex-list summary{padding-right:14px}}
+
+/* Кнопки */
+.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;line-height:1.2}
+.btn.primary{background:var(--z);color:var(--on-accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--z)}
+.btn.danger{background:var(--danger);color:var(--on-accent)}
+.btn.small{padding:6px 12px;font-size:14px;border-radius:9px}
+.btn.big{padding:14px 28px;font-size:18px;border-radius:14px}
+
+/* Фигурки */
+.fig{display:block;width:100%;height:auto;overflow:visible}
+.fig .floor{stroke:var(--line);stroke-width:1.5}
+.fig .prop{fill:var(--prop)}
+.fig .prop-l{stroke:var(--prop);stroke-width:3;stroke-linecap:round;fill:none}
+.fig .rope{stroke:var(--z);stroke-width:2;stroke-dasharray:4 3;fill:none}
+.fig .ball{fill:var(--z-soft);stroke:var(--z);stroke-width:1.5}
+.fig .item{fill:var(--z)}
+.fig .towel{stroke:var(--z);stroke-width:3;fill:none;stroke-linecap:round;opacity:.7}
+.fig .lb{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.fig .torso{stroke-width:6}
+.fig .far{stroke:var(--fig-far)}
+.fig .tape{fill:none;stroke:var(--z);stroke-width:2.2;stroke-linecap:round}
+.fig .head{fill:var(--ink)}
+.fig .pA,.fig .pB{transition:opacity .25s}
+.fig .pB{opacity:0}
+.fig[data-f="1"] .pA{opacity:0}
+.fig[data-f="1"] .pB{opacity:1}
+
+/* Дневник */
+.diary-grid{display:grid;gap:20px;grid-template-columns:1fr}
+@media (min-width:900px){.diary-grid{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:20px;min-width:0}
+.panel h3{font-size:17px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--surface-2);border-radius:14px;padding:12px}
+.stat b{display:block;font:700 28px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted);font-weight:700}
+.pain-line{margin-top:12px;font-size:14px;color:var(--muted)}
+.pain-line b{color:var(--ink)}
+.cal{margin-top:18px}
+.cal-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.cal-h b{font-weight:800}
+.legend{display:flex;gap:12px;font-size:13px;color:var(--muted);font-weight:700}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-grid .wd{font-size:11px;font-weight:800;color:var(--muted);text-align:center;text-transform:uppercase;letter-spacing:.05em}
+.day{aspect-ratio:1/1;max-width:100%;background:var(--surface-2);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+.day.future{opacity:.35}
+.day.today{box-shadow:inset 0 0 0 2px var(--ink)}
+.day.has{background:var(--surface)}
+.dots{display:flex;gap:3px;height:7px}
+.dots i{width:7px;height:7px;border-radius:50%}
+.dot-back{background:var(--back)}
+.dot-legs{background:var(--legs)}
+.recent{list-style:none;display:grid;gap:8px}
+.entry{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:start;background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.entry .dotbig{width:10px;height:10px;border-radius:50%;margin-top:7px}
+.entry-t{min-width:0}
+.entry-t b{font-weight:800}
+.entry-t small{display:block;color:var(--muted);font-weight:600;font-size:13px}
+.entry-t p{font-size:14px;margin-top:2px;overflow-wrap:anywhere}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:12px;font-weight:800;border-radius:999px;padding:1px 8px;background:var(--surface);color:var(--muted)}
+.tag.pain{background:var(--danger-soft);color:var(--danger)}
+.tag.easy{background:var(--ok-soft);color:var(--ok)}
+.tag.hard{background:var(--warn-soft);color:var(--warn)}
+.del{border:0;background:transparent;color:var(--muted);cursor:pointer;font-weight:700;font-size:13px;padding:4px 6px;border-radius:8px}
+.del:hover{color:var(--danger)}
+.confirm-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:700}
+.empty{color:var(--muted);background:var(--surface-2);border-radius:12px;padding:18px;text-align:center}
+.store-note{margin-top:14px;font-size:13px;color:var(--muted)}
+.diary-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+/* Формы */
+fieldset{border:0;padding:0;margin:0}
+legend,.field>span{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding:0}
+.feel-row{display:flex;flex-wrap:wrap;gap:8px}
+.feel-row label{cursor:pointer}
+.feel-row input{position:absolute;opacity:0;pointer-events:none}
+.feel-row span{display:inline-block;padding:8px 14px;border-radius:10px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-weight:800}
+.feel-row input:checked + span{background:var(--z);color:var(--on-accent);box-shadow:none}
+.feel-row input:focus-visible + span{outline:3px solid var(--z);outline-offset:2px}
+.check{display:flex;align-items:center;gap:10px;font-weight:800;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--danger)}
+.pain-hint{background:var(--danger-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.pain-hint b{color:var(--danger)}
+.field{display:flex;flex-direction:column}
+.field textarea,.field input,.field select{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 11px;width:100%;resize:vertical}
+.form{display:grid;gap:16px}
+
+/* Безопасность */
+.safety{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.safe{background:var(--surface);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.safe h3{font-size:17px;margin-bottom:12px}
+.safe ul{list-style:none;display:grid;gap:8px}
+.safe li{padding-left:22px;position:relative}
+.safe li::before{content:"";position:absolute;left:2px;top:.55em;width:10px;height:10px;border-radius:3px;background:var(--mk)}
+.safe.go{--mk:var(--ok)}
+.safe.stop{--mk:var(--danger)}
+.safe.stop h3{color:var(--danger)}
+.safe.no{--mk:var(--warn)}
+.tbl-wrap{overflow-x:auto;margin-top:20px;background:var(--surface);border-radius:18px;box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);font-size:15px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:800}
+footer{padding-block:28px 40px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);margin-top:20px}
+
+/* Модальные окна */
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(10,18,26,.55)}
+.modal-card{background:var(--surface);border-radius:20px;padding:22px;width:min(100%,460px);max-height:calc(100dvh - 32px);overflow:auto;box-shadow:var(--shadow)}
+.modal-card h3{font-size:20px;margin-bottom:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:420px){.row2{grid-template-columns:1fr}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:12px;font-weight:800;z-index:80;box-shadow:var(--shadow)}
+
+/* Режим тренировки */
+.trainer{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.t-top{display:flex;align-items:center;gap:10px;padding:12px 16px}
+.t-where{margin-right:auto;min-width:0}
+.t-where b{display:block;font-family:var(--f-display);font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-where span{font-size:13px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+.icon-btn{width:42px;height:42px;border-radius:12px;border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center;cursor:pointer;flex:none}
+.icon-btn[aria-pressed="false"]{color:var(--muted)}
+.bar{height:6px;background:var(--line);margin-inline:16px;border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--z);border-radius:3px;transition:width .2s linear}
+.t-stage{flex:1;overflow:auto;display:grid;gap:18px;padding:18px 16px;align-content:start;max-width:1100px;width:100%;margin-inline:auto}
+@media (min-width:860px){.t-stage{grid-template-columns:1.1fr 1fr;align-content:center;gap:40px;padding-inline:28px}}
+.t-fig{background:var(--surface);border-radius:24px;padding:18px;box-shadow:var(--shadow);position:relative}
+.t-fig .fig{max-height:46vh}
+.t-fig.working .fig{animation:breathe 3.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+.side-badge{position:absolute;top:14px;left:14px;background:var(--z-soft);color:var(--ink);font-weight:800;font-size:13px;border-radius:999px;padding:3px 10px}
+.t-info{display:flex;flex-direction:column;gap:12px;min-width:0}
+.phase{align-self:flex-start;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.ph-work{background:var(--z);color:var(--on-accent);box-shadow:none}
+.ph-rest{background:var(--ok-soft);color:var(--ok);box-shadow:none}
+.ph-switch{background:var(--warn-soft);color:var(--warn);box-shadow:none}
+.t-game{font-weight:800;color:var(--z);font-size:18px;margin-bottom:-8px}
+.t-info h2{font-size:clamp(22px,3.6vw,32px)}
+.next-l{font-size:14px;color:var(--muted);font-weight:800;margin-bottom:-8px}
+.ring-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ring{position:relative;width:120px;height:120px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9}
+.ring .trk{stroke:var(--line)}
+.ring .val{stroke:var(--z);stroke-linecap:round;transition:stroke-dashoffset .12s linear}
+.ph-rest-ring .val{stroke:var(--ok)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 36px/1 var(--f-display);font-variant-numeric:tabular-nums}
+.dose-big{font-weight:800;font-size:18px}
+.dose-big small{display:block;color:var(--muted);font-size:14px;font-weight:700}
+.t-steps{padding-left:20px;display:grid;gap:3px}
+.t-controls{display:flex;justify-content:center;gap:10px;padding:12px 16px 18px;flex-wrap:wrap}
+.t-controls .btn{min-width:110px}
+.pulse{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--z) 55%,transparent)}50%{box-shadow:0 0 0 10px transparent}}
+.finish{grid-column:1/-1;max-width:560px;width:100%;margin-inline:auto;background:var(--surface);border-radius:24px;padding:24px;box-shadow:var(--shadow)}
+.finish h2{font-size:26px;margin-bottom:6px}
+.finish .sum{color:var(--muted);margin-bottom:20px}
+.confirm{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,18,26,.55);padding:16px;z-index:5}
+.kbd-hint{font-size:12px;color:var(--muted);text-align:center;padding-bottom:10px}
+@media (max-width:600px){.kbd-hint{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .t-fig.working .fig,.pulse{animation:none}
+  .fig .pA,.fig .pB,.bar i,.ring .val{transition:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Опора — на главную"><span class="mark" aria-hidden="true"><i></i><i></i></span>Опора</a>
+    <nav aria-label="Разделы">
+      <a href="#train">Тренировки</a>
+      <a href="#diary">Дневник</a>
+      <a href="#safety">Безопасность</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <p class="eyebrow">Детская ЛФК дома · 5–18 лет</p>
+      <h1 style="margin-top:10px">Упражнения для <em>спины</em> и <em>ног</em> по таймеру</h1>
+      <p class="lead">Выберите возраст и зону. Сайт покажет схему каждого упражнения, посчитает подходы и отдых и запишет занятие в дневник.</p>
+      <div class="disclaimer" role="note">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z"/></svg>
+        <p><b>Это не лечение.</b> Упражнения общие и не заменяют врача. Перед началом покажите программу ортопеду или врачу ЛФК, особенно при сколиозе.</p>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <figure class="z-back" id="heroBack"></figure>
+      <figure class="z-legs" id="heroLegs"></figure>
+    </div>
+  </div>
+
+  <section class="block" id="train">
+    <div class="wrap">
+      <div class="sec-h">
+        <div>
+          <p class="eyebrow">Каталог</p>
+          <h2 style="margin-top:6px">Тренировки</h2>
+        </div>
+        <p>Нажмите на упражнение, чтобы увидеть, как его делать.</p>
+      </div>
+      <div class="controls">
+        <div class="ctl">
+          <span class="ctl-l" id="ageLbl">Возраст</span>
+          <div class="seg" role="group" aria-labelledby="ageLbl">
+            <button type="button" data-age="y">5–8 лет</button>
+            <button type="button" data-age="m">9–12 лет</button>
+            <button type="button" data-age="t">13–18 лет</button>
+          </div>
+        </div>
+        <div class="ctl">
+          <span class="ctl-l" id="zoneLbl">Зона</span>
+          <div class="seg" role="group" aria-labelledby="zoneLbl">
+            <button type="button" data-zone-btn="back">Спина</button>
+            <button type="button" data-zone-btn="legs">Ноги</button>
+          </div>
+        </div>
+      </div>
+      <p class="age-note" id="ageNote"></p>
+      <div class="programs" id="programs"></div>
+    </div>
+  </section>
+
+  <section class="block" id="diary">
+    <div class="wrap">
+      <div class="sec-h">
+        <div>
+          <p class="eyebrow">Прогресс</p>
+          <h2 style="margin-top:6px">Дневник занятий</h2>
+        </div>
+        <p>Отмечайте каждое занятие: так видно, насколько регулярно ребёнок занимается и была ли боль.</p>
+      </div>
+      <div class="diary-grid">
+        <div class="panel">
+          <h3>Статистика</h3>
+          <div class="stats" id="stats"></div>
+          <p class="pain-line" id="painLine"></p>
+          <div class="cal">
+            <div class="cal-h"><b id="calRange"></b>
+              <span class="legend"><span><i class="dot-back"></i>Спина</span><span><i class="dot-legs"></i>Ноги</span></span>
+            </div>
+            <div class="cal-grid" id="cal"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Последние занятия</h3>
+          <ul class="recent" id="recent"></ul>
+          <div class="diary-actions">
+            <button class="btn primary z-back" type="button" data-mark="">Отметить занятие</button>
+          </div>
+          <p class="store-note">Дневник хранится только в этом браузере на этом устройстве. Если очистить данные сайта или открыть его на другом устройстве, записей там не будет.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="safety">
+    <div class="wrap">
+      <div class="sec-h">
+        <div>
+          <p class="eyebrow" style="color:var(--danger)">Важно</p>
+          <h2 style="margin-top:6px">Безопасность</h2>
+        </div>
+        <p>Лечебная физкультура помогает, только если заниматься регулярно и без боли.</p>
+      </div>
+      <div class="safety">
+        <div class="safe go">
+          <h3>Перед началом</h3>
+          <ul>
+            <li>Покажите программу ортопеду или врачу ЛФК.</li>
+            <li>Занимайтесь через 1–1,5 часа после еды.</li>
+            <li>Удобная одежда, коврик. Упражнения для стоп делайте босиком.</li>
+            <li>Дети 5–8 лет занимаются только со взрослым рядом.</li>
+            <li>Начинайте с меньшего числа повторов и добавляйте постепенно.</li>
+          </ul>
+        </div>
+        <div class="safe stop">
+          <h3>Сразу остановитесь, если</h3>
+          <ul>
+            <li>Появилась острая или стреляющая боль.</li>
+            <li>Немеют или покалывают руки или ноги.</li>
+            <li>Кружится голова, тошнит, трудно дышать.</li>
+            <li>Боль сохраняется или усиливается на следующий день.</li>
+          </ul>
+        </div>
+        <div class="safe no">
+          <h3>Чего не делать без врача</h3>
+          <ul>
+            <li>Асимметричные упражнения при сколиозе.</li>
+            <li>Висы, прыжки, скручивания и глубокие наклоны при сколиозе.</li>
+            <li>Заниматься при обострении, после травмы или с температурой.</li>
+            <li>Увеличивать нагрузку через боль.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <caption class="sr-only" style="position:absolute;left:-9999px">Частота занятий по возрастам</caption>
+          <thead><tr><th scope="col">Возраст</th><th scope="col">Подходы</th><th scope="col">Отдых</th><th scope="col">Длительность</th><th scope="col">Частота</th><th scope="col">Как заниматься</th></tr></thead>
+          <tbody id="freq"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">«Опора» — домашние тренировки ЛФК для детей. Сайт не ставит диагнозы и не назначает лечение. Данные дневника не покидают ваше устройство.</div>
+</footer>
+
+<!-- Ручная отметка -->
+<div class="modal" id="markModal" hidden role="dialog" aria-modal="true" aria-labelledby="mkTitle">
+  <div class="modal-card z-back">
+    <h3 id="mkTitle">Отметить занятие</h3>
+    <form class="form" id="mkForm">
+      <div class="row2">
+        <label class="field"><span>Тренировка</span><select id="mk-prog"></select></label>
+        <label class="field"><span>Дата</span><input type="date" id="mk-date" required></label>
+      </div>
+      <div id="mkFeel"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" type="submit">Записать</button>
+        <button class="btn ghost" type="button" data-close-modal>Отмена</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Режим тренировки -->
+<div class="trainer" id="trainer" hidden role="dialog" aria-modal="true" aria-labelledby="tTitle">
+  <div class="t-top">
+    <div class="t-where"><b id="tTitle"></b><span id="tWhere"></span></div>
+    <button class="icon-btn" id="tSound" type="button" aria-pressed="true" aria-label="Звук">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3z"/><path id="tSoundWaves" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+    </button>
+    <button class="icon-btn" id="tClose" type="button" aria-label="Выйти из тренировки">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M5 5l14 14M19 5 5 19"/></svg>
+    </button>
+  </div>
+  <div class="bar" aria-hidden="true"><i id="tBar"></i></div>
+  <div class="t-stage" id="tStage" aria-live="polite"></div>
+  <div class="t-controls" id="tControls">
+    <button class="btn ghost" id="tPrev" type="button">Назад</button>
+    <button class="btn primary" id="tPause" type="button">Пауза</button>
+    <button class="btn ghost" id="tNext" type="button">Дальше</button>
+  </div>
+  <p class="kbd-hint" id="tKbd">Пробел — пауза · Esc — выход</p>
+  <div class="confirm" id="tConfirm" hidden>
+    <div class="modal-card">
+      <h3>Выйти из тренировки?</h3>
+      <p style="color:var(--muted);margin-bottom:18px">Эта тренировка не попадёт в дневник. Отметить её можно позже вручную.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" id="tStay" type="button">Продолжить тренировку</button>
+        <button class="btn ghost" id="tQuit" type="button">Выйти</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+/* ---------- Данные ---------- */
+const AGES = {
+  y:{label:'5–8 лет', sets:1, rest:15, dur:'8–12 мин', freq:'3–4 раза в неделю', how:'Игровые названия, взрослый рядом'},
+  m:{label:'9–12 лет', sets:2, rest:15, dur:'12–18 мин', freq:'3–5 раз в неделю', how:'Ребёнок сам следит за техникой'},
+  t:{label:'13–18 лет', sets:2, rest:20, dur:'15–22 мин', freq:'4–5 раз в неделю', how:'Больше повторов и дольше удержание'}
+};
+const ZONES = {back:'Спина', legs:'Ноги'};
+
+/* Позы: вид сбоку, viewBox 120×80, пол на y=75.
+   h — голова, s — плечи, p — таз, c — изгиб спины,
+   arms: [[локоть, кисть]…], legs: [[колено, лодыжка, носок]…]; первая конечность из двух — дальняя. */
+const STAND_LEGS = [[[59,60],[58,72],[64,74]],[[61,60],[61,72],[67,74]]];
+const QUAD = {p:[48,60], s:[68,57], h:[77,53],
+  arms:[[[66,66],[66,74]],[[68,66],[68,74]]], legs:[[[48,74],[35,74],[32,72]]]};
+const PRONE = {p:[48,70], s:[68,69]};
+const P = {
+  wall:{h:[56,15], s:[55,26], p:[54,46], arms:[[[55,36],[56,46]]], legs:[[[55,60],[57,72],[63,74]]]},
+  scap1:{h:[60,15], s:[60,26], p:[60,46], arms:[[[66,34],[72,27]]], legs:STAND_LEGS},
+  scap2:{h:[60,15], s:[60,26], p:[60,46], arms:[[[53,35],[58,28]]], legs:STAND_LEGS},
+  angel1:{h:[56,15], s:[55,26], p:[54,46], arms:[[[56,34],[56,23]]], legs:[[[55,60],[57,72],[63,74]]]},
+  angel2:{h:[56,15], s:[55,26], p:[54,46], arms:[[[56,17],[56,6]]], legs:[[[55,60],[57,72],[63,74]]]},
+  quad:QUAD,
+  cat:{...QUAD, c:[58,48], h:[75,63]},
+  cow:{...QUAD, c:[58,66], h:[78,50]},
+  boatUp:{...PRONE, h:[77,64], arms:[[[79,63],[90,59]]], legs:[[[34,68],[22,65],[19,62]]]},
+  boatDown:{...PRONE, h:[77,68], arms:[[[79,72],[90,73]]], legs:[[[34,71],[22,72],[19,70]]]},
+  birdDog:{p:[48,60], s:[68,57], h:[77,53], arms:[[[68,66],[68,74]],[[78,55],[89,53]]], legs:[[[48,74],[35,74],[32,72]],[[35,59],[23,58],[20,55]]]},
+  bridgeUp:{h:[20,68], s:[30,70], p:[48,62], arms:[[[40,72],[50,73]]], legs:[[[60,55],[62,72],[68,74]]]},
+  bridgeDown:{h:[20,68], s:[30,70], p:[48,71], arms:[[[40,72],[50,73]]], legs:[[[58,57],[62,72],[68,74]]]},
+  child:{h:[72,68], s:[64,64], p:[44,64], c:[54,52], arms:[[[80,71],[91,72]]], legs:[[[58,73],[40,73],[37,71]]]},
+  swim1:{...PRONE, h:[77,66], arms:[[[79,72],[90,73]],[[79,63],[90,60]]], legs:[[[34,69],[22,65],[19,63]],[[34,72],[22,72],[19,70]]]},
+  swim2:{...PRONE, h:[77,66], arms:[[[79,63],[90,60]],[[79,72],[90,73]]], legs:[[[34,72],[22,72],[19,70]],[[34,69],[22,65],[19,63]]]},
+  plank:{h:[79,55], s:[70,58], p:[50,63], arms:[[[70,72],[82,73]]], legs:[[[36,73],[24,68],[21,65]]]},
+  toe1:{h:[60,12], s:[60,23], p:[60,43], arms:[[[66,33],[62,43]]], legs:[[[62,56],[64,67],[68,74]],[[58,56],[57,67],[61,74]]]},
+  toe2:{h:[60,12], s:[60,23], p:[60,43], arms:[[[66,33],[62,43]]], legs:[[[58,56],[57,67],[61,74]],[[62,56],[64,67],[68,74]]]},
+  heel1:{h:[60,15], s:[60,26], p:[60,46], arms:[[[62,37],[69,33]]], legs:[[[63,59],[65,71],[70,65]],[[57,59],[56,71],[61,65]]]},
+  heel2:{h:[60,15], s:[60,26], p:[60,46], arms:[[[62,37],[69,33]]], legs:[[[57,59],[56,71],[61,65]],[[63,59],[65,71],[70,65]]]},
+  bear1:{h:[60,15], s:[60,26], p:[60,46], arms:[[[67,33],[72,41]]], legs:[[[66,59],[64,71],[69,72]],[[54,59],[57,71],[62,72]]]},
+  bear2:{h:[60,15], s:[60,26], p:[60,46], arms:[[[67,33],[72,41]]], legs:[[[54,59],[57,71],[62,72]],[[66,59],[64,71],[69,72]]]},
+  seat:{h:[43,16], s:[42,27], p:[42,48], arms:[[[46,37],[55,44]]], legs:[[[56,49],[58,71],[64,74]]]},
+  seatCurl:{h:[43,16], s:[42,27], p:[42,48], arms:[[[46,37],[55,44]]], legs:[[[56,49],[58,71],[62,71]]]},
+  seatLift:{h:[43,16], s:[42,27], p:[42,48], arms:[[[46,37],[55,44]]], legs:[[[56,47],[62,64],[68,66]]]},
+  seatBall:{h:[43,16], s:[42,27], p:[42,48], arms:[[[46,37],[55,44]]], legs:[[[56,49],[60,64],[68,65]]]},
+  seatBall2:{h:[43,16], s:[42,27], p:[42,48], arms:[[[46,37],[55,44]]], legs:[[[57,48],[66,64],[74,65]]]},
+  raise1:{h:[60,15], s:[60,26], p:[60,46], arms:[[[67,34],[75,31]]], legs:[[[60,60],[60,72],[66,74]]]},
+  raise2:{h:[60,10], s:[60,21], p:[60,41], arms:[[[67,29],[75,27]]], legs:[[[60,55],[61,67],[66,74]]]},
+  calf:{h:[80,21], s:[74,30], p:[62,46], arms:[[[82,33],[89,28]]], legs:[[[53,59],[45,72],[51,74]],[[72,58],[70,72],[76,74]]]},
+  squatUp:{h:[56,15], s:[56,26], p:[56,46], arms:[[[64,28],[74,28]]], legs:[[[57,60],[57,72],[63,74]]]},
+  squatDown:{h:[64,26], s:[58,34], p:[46,51], arms:[[[67,37],[77,37]]], legs:[[[60,56],[58,72],[64,74]]]},
+  side1:{h:[20,64], s:[30,68], p:[58,69], arms:[[[22,72],[16,64]],[[40,68],[48,72]]], legs:[[[72,70],[88,71],[90,68]],[[71,63],[85,56],[88,53]]]},
+  side2:{h:[20,64], s:[30,68], p:[58,69], arms:[[[22,72],[16,64]],[[40,68],[48,72]]], legs:[[[72,71],[88,72],[90,69]],[[72,68],[88,69],[90,66]]]},
+  squeeze:{h:[20,68], s:[30,70], p:[48,71], arms:[[[40,72],[50,73]]], legs:[[[58,57],[62,72],[68,74]]]},
+  stork:{h:[60,15], s:[60,26], p:[60,46], arms:[[[53,33],[45,33]],[[67,33],[75,33]]], legs:[[[60,60],[60,72],[66,74]],[[70,52],[67,64],[72,65]]]},
+  line1:{h:[60,15], s:[60,26], p:[60,46], arms:[[[53,33],[45,33]],[[67,33],[75,33]]], legs:[[[64,59],[66,72],[72,74]],[[57,59],[54,72],[60,74]]]},
+  line2:{h:[60,15], s:[60,26], p:[60,46], arms:[[[53,33],[45,33]],[[67,33],[75,33]]], legs:[[[57,59],[54,72],[60,74]],[[64,59],[66,72],[72,74]]]}
+};
+
+const CHAIR_SEAT = {chair:[30,48,50]};
+const EX = {
+  wallStand:{name:'Стойка у стены', game:'Солдатик', pose:'wall', props:{wall:46},
+    d:{y:{t:20}, m:{t:30}, t:{t:45}},
+    steps:['Встань спиной к стене, пятки в 5 см от неё.','Коснись стены затылком, лопатками и ягодицами.','Подбородок чуть к себе, дыши спокойно.'],
+    cue:'плечи опущены, подбородок не задирай'},
+  scapSqueeze:{name:'Сведение лопаток', game:'Крылышки', pose:'scap1', pose2:'scap2', tempo:3,
+    d:{y:{r:8}, m:{r:10}, t:{r:12}},
+    steps:['Встань прямо, руки согни в локтях перед собой.','Отведи локти назад и сведи лопатки.','Задержись на 2 секунды и вернись.'],
+    cue:'плечи не поднимаются к ушам'},
+  wallAngel:{name:'Ангел у стены', game:'Ангелочек', pose:'angel1', pose2:'angel2', props:{wall:46}, tempo:4,
+    d:{y:{r:6}, m:{r:8}, t:{r:10}},
+    steps:['Встань спиной к стене, прижми поясницу.','Согни руки: локти и кисти касаются стены.','Медленно скользи руками вверх и вниз по стене.'],
+    cue:'поясница не отрывается от стены'},
+  catCow:{name:'Кошка — корова', game:'Кошечка', pose:'cat', pose2:'cow', tempo:5,
+    d:{y:{r:6}, m:{r:8}, t:{r:10}},
+    steps:['Встань на четвереньки: ладони под плечами, колени под тазом.','На выдохе округли спину вверх, голову опусти.','На вдохе мягко прогнись, взгляд вперёд.'],
+    cue:'двигайся плавно, без рывков'},
+  superman:{name:'Лодочка', game:'Кораблик', pose:'boatUp', pose2:'boatDown',
+    d:{y:{t:10}, m:{t:15}, t:{t:25}},
+    steps:['Ляг на живот, руки вытяни вперёд.','Одновременно приподними руки, грудь и ноги.','Удерживай, затем плавно опустись.'],
+    cue:'смотри в пол, шея продолжает спину'},
+  birdDog:{name:'Птица-собака', game:'Пёсик-птичка', pose:'birdDog', pose2:'quad', tempo:4, side:true,
+    d:{y:{r:4}, m:{r:6}, t:{r:8}},
+    steps:['Встань на четвереньки, спина ровная.','Вытяни вперёд руку и назад противоположную ногу.','Задержись на 2 секунды и вернись.'],
+    cue:'таз не заваливается набок'},
+  bridge:{name:'Ягодичный мостик', game:'Мостик', pose:'bridgeUp', pose2:'bridgeDown', tempo:3,
+    d:{y:{r:8}, m:{r:10}, t:{r:12}},
+    steps:['Ляг на спину, согни колени, стопы на полу.','Напряги ягодицы и подними таз.','Задержись на 2 секунды и опустись.'],
+    cue:'не прогибайся в пояснице'},
+  childPose:{name:'Поза ребёнка', game:'Черепашка', pose:'child',
+    d:{y:{t:20}, m:{t:30}, t:{t:30}},
+    steps:['Сядь на пятки, колени чуть врозь.','Наклонись вперёд и вытяни руки по полу.','Расслабь спину и дыши глубоко.'],
+    cue:'дыши животом и расслабляйся'},
+  swimmer:{name:'Пловец', game:'Рыбка', pose:'swim1', pose2:'swim2', tempo:2, alt:true,
+    d:{y:{t:15}, m:{t:20}, t:{t:30}},
+    steps:['Ляг на живот, руки вытяни вперёд.','Поочерёдно поднимай руку и противоположную ногу.','Двигайся ритмично, будто плывёшь.'],
+    cue:'обе стороны работают одинаково'},
+  kneePlank:{name:'Планка с колен', game:'Доска', pose:'plank',
+    d:{y:null, m:{t:15}, t:{t:25}},
+    steps:['Обопрись на предплечья и колени.','Выпрями тело от плеч до коленей.','Удерживай положение, дыши ровно.'],
+    cue:'живот подтянут, таз не провисает'},
+  toeWalk:{name:'Ходьба на носках', game:'Балерина', pose:'toe1', pose2:'toe2', tempo:1, alt:true,
+    d:{y:{t:30}, m:{t:40}, t:{t:45}},
+    steps:['Поднимись на носки, руки на пояс.','Ходи по комнате маленькими шагами.','Не опускай пятки до конца упражнения.'],
+    cue:'колени прямые, спина ровная'},
+  heelWalk:{name:'Ходьба на пятках', game:'Пингвин', pose:'heel1', pose2:'heel2', tempo:1, alt:true,
+    d:{y:{t:30}, m:{t:30}, t:{t:40}},
+    steps:['Встань на пятки, пальцы подними вверх.','Ходи маленькими шагами.','Руки помогают держать равновесие.'],
+    cue:'не сгибайся в поясе'},
+  outerEdge:{name:'Ходьба на внешнем крае стопы', game:'Мишка косолапый', pose:'bear1', pose2:'bear2', tempo:1.4, alt:true,
+    d:{y:{t:30}, m:{t:30}, t:{t:40}},
+    steps:['Перенеси вес на внешние края стоп.','Пальцы слегка подожми.','Ходи медленно, как медвежонок.'],
+    cue:'стопы не заваливаются внутрь'},
+  towel:{name:'Сборка полотенца пальцами', game:'Гусеница', pose:'seat', pose2:'seatCurl', props:{...CHAIR_SEAT, towel:1}, tempo:2, alt:true, side:true, sideLabel:'на каждую ногу',
+    d:{y:{t:30}, m:{t:40}, t:{t:45}},
+    steps:['Сядь на стул, поставь стопу на край полотенца.','Пальцами собирай полотенце к себе.','Пятка остаётся на полу.'],
+    cue:'работают только пальцы'},
+  pickUp:{name:'Захват предметов пальцами', game:'Обезьянка', pose:'seat', pose2:'seatLift', props:{...CHAIR_SEAT, items:1}, tempo:4, side:true, sideLabel:'на каждую ногу',
+    d:{y:{r:5}, m:{r:8}, t:{r:10}},
+    steps:['Разложи на полу мелкие предметы: карандаш, крышки, шарики.','Бери их пальцами ноги по одному.','Перекладывай в коробку.'],
+    cue:'сжимай пальцы, рукой не помогай'},
+  ballRoll:{name:'Перекатывание мяча стопой', game:'Каток', pose:'seatBall', pose2:'seatBall2', props:{...CHAIR_SEAT, ball:[67,70,4.5]}, tempo:2, alt:true, side:true, sideLabel:'на каждую ногу',
+    d:{y:{t:30}, m:{t:40}, t:{t:45}},
+    steps:['Сядь на стул, поставь стопу на мячик.','Катай мяч от пальцев к пятке и обратно.','Надавливай мягко.'],
+    cue:'не должно быть больно'},
+  calfRaise:{name:'Подъёмы на носки', game:'Жираф', pose:'raise1', pose2:'raise2', props:{wall:76}, tempo:2,
+    d:{y:{r:8}, m:{r:12}, t:{r:15}},
+    steps:['Встань прямо, можно держаться за стену.','Медленно поднимись на носки.','Плавно опустись на пятки.'],
+    cue:'пятки поднимаются ровно, не заваливаются наружу'},
+  calfStretch:{name:'Растяжка икр', game:'Толкаем стену', pose:'calf', props:{wall:90}, side:true, sideLabel:'на каждую ногу',
+    d:{y:{t:15}, m:{t:20}, t:{t:30}},
+    steps:['Встань лицом к стене, упрись в неё руками.','Отставь одну ногу назад, пятка на полу.','Согни переднюю ногу и почувствуй растяжение в икре.'],
+    cue:'задняя пятка прижата к полу'},
+  chairSquat:{name:'Приседание к стулу', game:'Садимся на стульчик', pose:'squatDown', pose2:'squatUp', props:{chair:[26,42,53]}, tempo:3,
+    d:{y:{r:6}, m:{r:10}, t:{r:12}},
+    steps:['Встань перед стулом, стопы на ширине плеч.','Отведи таз назад и опустись, почти касаясь стула.','Встань, отталкиваясь пятками.'],
+    cue:'колени смотрят туда же, куда носки'},
+  sideLeg:{name:'Отведение ноги лёжа на боку', game:'Шлагбаум', pose:'side1', pose2:'side2', tempo:3, side:true, sideLabel:'на каждую ногу',
+    d:{y:{r:6}, m:{r:10}, t:{r:12}},
+    steps:['Ляг на бок, нижнюю руку положи под голову.','Подними верхнюю прямую ногу.','Медленно опусти. Носок смотрит вперёд.'],
+    cue:'корпус не откатывается назад'},
+  ballSqueeze:{name:'Сжимание мяча коленями', game:'Орешек', pose:'squeeze', props:{ball:[59,57,5]}, tempo:4,
+    d:{y:{r:8}, m:{r:10}, t:{r:12}},
+    steps:['Ляг на спину, согни колени, зажми мяч между ними.','Сожми мяч и удерживай 2–3 секунды.','Расслабься, но мяч не роняй.'],
+    cue:'стопы и колени на одной линии'},
+  singleLeg:{name:'Стойка на одной ноге', game:'Цапля', pose:'stork', side:true, sideLabel:'на каждую ногу',
+    d:{y:{t:10}, m:{t:20}, t:{t:30}},
+    steps:['Встань прямо, руки в стороны.','Подними одну ногу, согнув колено.','Держи равновесие, смотри в одну точку.'],
+    cue:'колено опорной ноги не заваливается внутрь'},
+  lineWalk:{name:'Ходьба по линии', game:'Канатоходец', pose:'line1', pose2:'line2', props:{rope:1}, tempo:1.2, alt:true,
+    d:{y:{t:30}, m:{t:40}, t:{t:45}},
+    steps:['Положи на пол скакалку или ленту.','Иди по линии, ставя пятку к носку.','Руки в стороны для равновесия.'],
+    cue:'стопа идёт прямо по линии'}
+};
+Object.entries(EX).forEach(([id,e])=>e.id=id);
+
+const PROGRAMS = [
+  {id:'posture', zone:'back', name:'Ровная осанка', game:'Прямая спинка', problems:['Нарушение осанки','Сутулость','Круглая спина'],
+    ex:['wallStand','scapSqueeze','wallAngel','catCow','superman','birdDog','bridge','childPose']},
+  {id:'scoliosis', zone:'back', name:'Спина при сколиозе', game:'Сильная спинка', problems:['Сколиоз 1–2 степени','Слабый мышечный корсет'],
+    note:'Только симметричные упражнения. Согласуйте программу с врачом.',
+    ex:['wallStand','catCow','swimmer','birdDog','kneePlank','bridge','childPose']},
+  {id:'feet', zone:'legs', name:'Сильные стопы', game:'Весёлые ножки', problems:['Плоскостопие','Слабый свод стопы'],
+    ex:['toeWalk','heelWalk','outerEdge','towel','pickUp','ballRoll','calfRaise','calfStretch']},
+  {id:'knees', zone:'legs', name:'Крепкие колени', game:'Прямые ножки', problems:['X-образные ноги','O-образные ноги','Слабые мышцы бёдер'],
+    ex:['chairSquat','bridge','sideLeg','ballSqueeze','singleLeg','lineWalk','calfStretch']}
+];
+const progById = id => PROGRAMS.find(p=>p.id===id);
+
+/* ---------- Утилиты ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function plural(n, f){ const a=Math.abs(n)%100, b=a%10; return a>10&&a<20?f[2]:b>1&&b<5?f[1]:b===1?f[0]:f[2]; }
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const MONTHS_N = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+function fmtDate(s){ const [y,m,d]=s.split('-').map(Number); return `${d} ${MONTHS[m-1]}${y!==new Date().getFullYear()?' '+y:''}`; }
+
+let prefs = Object.assign({age:'m', zone:'back', sound:true}, store.get('opora.prefs', {}));
+if(!AGES[prefs.age]) prefs.age='m';
+if(!ZONES[prefs.zone]) prefs.zone='back';
+let log = store.get('opora.log', []); if(!Array.isArray(log)) log=[];
+const savePrefs = ()=>store.set('opora.prefs', prefs);
+const saveLog = ()=>store.set('opora.log', log);
+
+/* ---------- Рисунки ---------- */
+const pts = a => a.map(p=>p.join(',')).join(' ');
+function bodySvg(B, zone){
+  const arms=B.arms||[], legs=B.legs||[];
+  const limb=(root,l,cls)=>`<polyline class="lb ${cls}" points="${pts([root,...l])}"/>`;
+  const torso = B.c ? `M${B.s} Q${B.c} ${B.p}` : `M${B.s} L${B.p}`;
+  const nearLeg = legs[legs.length-1], nearArm = arms[arms.length-1];
+  let o='';
+  if(arms.length>1) o+=limb(B.s,arms[0],'far');
+  if(legs.length>1) o+=limb(B.p,legs[0],'far');
+  if(nearLeg) o+=limb(B.p,nearLeg,'');
+  o+=`<path class="lb torso" d="${torso}"/>`;
+  if(zone==='back') o+=`<path class="tape" d="${torso}"/>`;
+  else if(nearLeg) o+=`<polyline class="tape" points="${pts([nearLeg[0],nearLeg[1]])}"/>`;
+  o+=`<line class="lb" x1="${B.s[0]}" y1="${B.s[1]}" x2="${B.h[0]}" y2="${B.h[1]}"/>`;
+  o+=`<circle class="head" cx="${B.h[0]}" cy="${B.h[1]}" r="5.5"/>`;
+  if(nearArm) o+=limb(B.s,nearArm,'');
+  return o;
+}
+function propsSvg(pr={}){
+  let o='';
+  if(pr.rope) o+=`<line class="rope" x1="8" y1="75.5" x2="112" y2="75.5"/>`;
+  if(pr.wall!=null) o+=`<rect class="prop" x="${pr.wall}" y="4" width="5" height="71" rx="1.5"/>`;
+  if(pr.chair){ const [a,b,y]=pr.chair; o+=`<path class="prop-l" d="M${a},${y-24} L${a},75 M${a},${y} L${b},${y} L${b},75"/>`; }
+  if(pr.towel) o+=`<path class="towel" d="M62,74 q3,-3 6,0 t6,0 t6,0 t6,0 t6,0"/>`;
+  if(pr.items) o+=`<circle class="item" cx="74" cy="73" r="2"/><rect class="item" x="80" y="72" width="9" height="2" rx="1"/><circle class="item" cx="94" cy="73" r="2"/>`;
+  return o;
+}
+function figSvg(e, zone){
+  const A=P[e.pose], B=e.pose2?P[e.pose2]:null;
+  let o = `<svg class="fig" viewBox="0 0 120 80" role="img" aria-label="Схема: ${esc(e.name)}"><line class="floor" x1="4" y1="75.5" x2="116" y2="75.5"/>${propsSvg(e.props)}`;
+  o += `<g class="pA">${bodySvg(A,zone)}</g>`;
+  if(B) o += `<g class="pB">${bodySvg(B,zone)}</g>`;
+  if(e.props && e.props.ball){ const [x,y,r]=e.props.ball; o+=`<circle class="ball" cx="${x}" cy="${y}" r="${r}"${e.pose==='squeeze'?' opacity=".85"':''}/>`; }
+  return o+'</svg>';
+}
+
+/* ---------- Шаги тренировки ---------- */
+function buildSteps(p, g){
+  const A=AGES[g], list=p.ex.map(id=>EX[id]).filter(e=>e.d[g]), steps=[];
+  list.forEach((e,i)=>{
+    const d=e.d[g], work=d.t || Math.round(d.r*e.tempo);
+    for(let s=1; s<=A.sets; s++){
+      if(s===1) steps.push({type:'prep', e, i, set:s, dur:5});
+      const sides=e.side?2:1;
+      for(let side=1; side<=sides; side++){
+        if(side===2) steps.push({type:'switch', e, i, set:s, dur:5});
+        steps.push({type:'work', e, i, set:s, side:e.side?side:0, dur:work, reps:d.r||0});
+      }
+      const last = i===list.length-1 && s===A.sets;
+      if(!last) steps.push({type:'rest', e, i, set:s, dur:A.rest,
+        next: s<A.sets ? e : list[i+1], nextI: s<A.sets ? i : i+1, nextSet: s<A.sets ? s+1 : 1});
+    }
+  });
+  return {steps, list};
+}
+const estimate = (p,g) => Math.max(1, Math.round(buildSteps(p,g).steps.reduce((a,s)=>a+s.dur,0)/60));
+function doseText(e, g){
+  const d=e.d[g]; if(!d) return null;
+  return {main: d.t ? `${d.t} сек` : `${d.r} ${plural(d.r,['раз','раза','раз'])}`, sub: e.side ? (e.sideLabel||'на каждую сторону') : (d.t?'удержание':'')};
+}
+
+/* ---------- Каталог ---------- */
+function exItem(e, g, young, zone){
+  const dose=doseText(e,g);
+  const names = young ? `<b>${esc(e.game)}</b><small>${esc(e.name)}</small>` : `<b>${esc(e.name)}</b>`;
+  if(!dose){
+    const from = e.d.m ? 'с 9 лет' : 'с 13 лет';
+    return `<li class="ex off"><details><summary tabindex="-1" onclick="return false">${figSvg(e,zone)}<span class="ex-name">${names}</span><span class="off-tag">${from}</span></summary></details></li>`;
+  }
+  return `<li class="ex"><details><summary>${figSvg(e,zone)}<span class="ex-name">${names}</span><span class="dose">${dose.main}${dose.sub?`<small>${dose.sub}</small>`:''}</span></summary>
+    <div class="ex-body"><ol>${e.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p class="cue"><b>Следи:</b> ${esc(e.cue)}</p></div></details></li>`;
+}
+function card(p, g){
+  const A=AGES[g], young=g==='y', list=p.ex.map(id=>EX[id]), n=list.filter(e=>e.d[g]).length;
+  return `<article class="card z-${p.zone}">
+    <div class="card-h">
+      <p class="eyebrow">${ZONES[p.zone]}</p>
+      <h3>${esc(young?p.game:p.name)}</h3>${young?`<p class="real">${esc(p.name)}</p>`:''}
+      <ul class="chips" aria-label="Для каких проблем">${p.problems.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+      ${p.note?`<p class="card-note">${esc(p.note)}</p>`:''}
+      <p class="meta"><span>≈ ${estimate(p,g)} мин</span><span>${n} ${plural(n,['упражнение','упражнения','упражнений'])}</span><span>${A.sets} ${plural(A.sets,['подход','подхода','подходов'])}</span></p>
+    </div>
+    <ol class="ex-list">${list.map(e=>exItem(e,g,young,p.zone)).join('')}</ol>
+    <div class="card-actions">
+      <button class="btn primary" type="button" data-start="${p.id}">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4l14 8-14 8z"/></svg>Начать</button>
+      <button class="btn ghost" type="button" data-mark="${p.id}">Отметить без таймера</button>
+    </div>
+  </article>`;
+}
+function renderCatalog(){
+  $$('[data-age]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.age===prefs.age)));
+  $$('[data-zone-btn]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.zoneBtn===prefs.zone)));
+  const A=AGES[prefs.age];
+  $('#ageNote').innerHTML = `<b>${A.label}:</b> ${A.sets} ${plural(A.sets,['подход','подхода','подходов'])}, отдых ${A.rest} сек, ${A.freq}. ${A.how}.`;
+  $('#programs').innerHTML = PROGRAMS.filter(p=>p.zone===prefs.zone).map(p=>card(p,prefs.age)).join('');
+}
+
+/* ---------- Форма самочувствия ---------- */
+const FEELS = [['easy','Легко'],['ok','Нормально'],['hard','Тяжело']];
+function feelForm(px){
+  return `<div class="form">
+    <fieldset><legend>Самочувствие</legend><div class="feel-row">${FEELS.map(([v,l])=>`<label><input type="radio" name="${px}-feel" id="${px}-feel-${v}" value="${v}"${v==='ok'?' checked':''}><span>${l}</span></label>`).join('')}</div></fieldset>
+    <label class="check"><input type="checkbox" id="${px}-pain"><span>Была боль</span></label>
+    <p class="pain-hint" id="${px}-hint" hidden><b>Уменьшите нагрузку.</b> Делайте меньше повторов и подходов, уберите упражнение, которое вызывает боль. Если боль повторяется, покажите ребёнка врачу.</p>
+    <label class="field"><span>Заметка</span><textarea id="${px}-note" rows="2" placeholder="Например: лодочка далась тяжело"></textarea></label>
+  </div>`;
+}
+function readFeel(px){
+  const f=$(`input[name="${px}-feel"]:checked`);
+  return {feel:f?f.value:'ok', pain:$(`#${px}-pain`).checked, note:$(`#${px}-note`).value.trim().slice(0,300)};
+}
+function addEntry(o){
+  log.push(Object.assign({id:Date.now()+Math.random().toString(36).slice(2,6), created:Date.now()}, o));
+  saveLog(); renderDiary();
+}
+
+/* ---------- Дневник ---------- */
+function renderDiary(){
+  const today=new Date(), tIso=iso(today), dates=new Set(log.map(e=>e.date));
+  let d=today; if(!dates.has(iso(d))) d=addDays(d,-1);
+  let streak=0; while(dates.has(iso(d))){ streak++; d=addDays(d,-1); }
+  const weekAgo=iso(addDays(today,-6));
+  const week=log.filter(e=>e.date>=weekAgo && e.date<=tIso).length;
+  const pain=log.filter(e=>e.pain).length;
+  $('#stats').innerHTML = [
+    [streak, plural(streak,['день подряд','дня подряд','дней подряд'])],
+    [week, 'за 7 дней'],
+    [log.length, plural(log.length,['занятие всего','занятия всего','занятий всего'])]
+  ].map(([n,l])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+  $('#painLine').innerHTML = log.length ? `Занятий с болью: <b>${pain} из ${log.length}</b>${pain?' — обсудите это с врачом.':'.'}` : 'Цель — 3 и больше занятий в неделю.';
+
+  const dow=(today.getDay()+6)%7, start=addDays(today,-dow-28);
+  const byDate={}; log.forEach(e=>{ (byDate[e.date] ||= new Set()).add(e.zone); });
+  let cal=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(w=>`<span class="wd">${w}</span>`).join('');
+  for(let i=0;i<35;i++){
+    const x=addDays(start,i), k=iso(x), z=byDate[k];
+    const cls=['day', k>tIso?'future':'', k===tIso?'today':'', z?'has':''].join(' ');
+    const label=`${x.getDate()} ${MONTHS[x.getMonth()]}${z?': '+[...z].map(v=>ZONES[v]).join(', '):''}`;
+    cal+=`<div class="${cls}" aria-label="${label}"><span>${x.getDate()}</span><span class="dots">${z?[...z].sort().map(v=>`<i class="dot-${v}"></i>`).join(''):''}</span></div>`;
+  }
+  $('#cal').innerHTML=cal;
+  const end=addDays(start,34);
+  $('#calRange').textContent = start.getMonth()===end.getMonth() ? MONTHS_N[start.getMonth()] : `${MONTHS_N[start.getMonth()]} — ${MONTHS_N[end.getMonth()]}`;
+
+  const recent=[...log].sort((a,b)=> b.date.localeCompare(a.date) || b.created-a.created).slice(0,8);
+  $('#recent').innerHTML = recent.length ? recent.map(e=>{
+    const p=progById(e.programId), feel=FEELS.find(f=>f[0]===e.feel);
+    return `<li class="entry" data-id="${e.id}"><span class="dotbig dot-${e.zone}" aria-hidden="true"></span>
+      <div class="entry-t"><b>${esc(p?p.name:'Тренировка')}</b><small>${fmtDate(e.date)} · ${AGES[e.age]?AGES[e.age].label:''}${e.mode==='manual'?' · без таймера':''}</small>
+        <div class="tags">${feel?`<span class="tag ${e.feel}">${feel[1]}</span>`:''}${e.pain?'<span class="tag pain">Была боль</span>':''}</div>
+        ${e.note?`<p>${esc(e.note)}</p>`:''}</div>
+      <button class="del" type="button" data-del="${e.id}" aria-label="Удалить запись">Удалить</button></li>`;
+  }).join('') : `<li class="empty">Пока нет занятий. Начните тренировку в каталоге или отметьте занятие вручную.</li>`;
+}
+
+/* ---------- Ручная отметка ---------- */
+let lastFocus=null;
+function openMark(pid){
+  lastFocus=document.activeElement;
+  const sel=$('#mk-prog');
+  sel.innerHTML=PROGRAMS.map(p=>`<option value="${p.id}">${p.name} · ${ZONES[p.zone]}</option>`).join('');
+  sel.value = pid || PROGRAMS.find(p=>p.zone===prefs.zone).id;
+  const t=iso(new Date()); $('#mk-date').value=t; $('#mk-date').max=t;
+  $('#mkFeel').innerHTML=feelForm('mk');
+  $('#markModal').hidden=false; sel.focus();
+}
+function closeMark(){ $('#markModal').hidden=true; if(lastFocus) lastFocus.focus(); }
+$('#mkForm').addEventListener('submit', ev=>{
+  ev.preventDefault();
+  const p=progById($('#mk-prog').value), date=$('#mk-date').value;
+  if(!date || date>iso(new Date())){ $('#mk-date').focus(); return; }
+  addEntry(Object.assign({date, programId:p.id, zone:p.zone, age:prefs.age, mode:'manual'}, readFeel('mk')));
+  closeMark(); toast('Занятие записано в дневник');
+});
+
+let toastT;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true, 2600); }
+
+/* ---------- Звук ---------- */
+let actx=null;
+function beep(freq=660, dur=.1, vol=.18){
+  if(!prefs.sound) return;
+  try{
+    actx ||= new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(), g=actx.createGain(), t=actx.currentTime;
+    o.frequency.value=freq; o.type='sine';
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(actx.destination); o.start(t); o.stop(t+dur+.02);
+  }catch(e){}
+}
+
+/* ---------- Таймер ---------- */
+const CIRC = 2*Math.PI*52;
+let T=null;
+async function wake(){ try{ if(T && 'wakeLock' in navigator) T.lock=await navigator.wakeLock.request('screen'); }catch(e){} }
+function unwake(){ try{ T && T.lock && T.lock.release(); }catch(e){} }
+document.addEventListener('visibilitychange', ()=>{ if(T && T.active && document.visibilityState==='visible') wake(); });
+
+function startTraining(pid){
+  const p=progById(pid), g=prefs.age, {steps,list}=buildSteps(p,g);
+  lastFocus=document.activeElement;
+  T={p, g, steps, list, idx:0, rem:0, paused:false, waiting:false, confirm:false, active:true, lastSec:null, last:performance.now()};
+  const tr=$('#trainer'); tr.className='trainer z-'+p.zone; tr.hidden=false;
+  document.body.style.overflow='hidden';
+  $('#tTitle').textContent = g==='y' ? p.game : p.name;
+  $('#tControls').hidden=false; $('#tKbd').hidden=false;
+  syncSound(); beep(0,0,0);
+  wake();
+  go(0);
+  T.int=setInterval(tick, 100);
+  $('#tPause').focus();
+}
+function go(i){
+  if(i<0) i=0;
+  if(i>=T.steps.length){ finish(); return; }
+  T.idx=i; T.rem=T.steps[i].dur*1000; T.waiting=false; T.lastSec=null; T.last=performance.now();
+  renderStep(); beep(T.steps[i].type==='work'?880:520, .18);
+}
+function renderStep(){
+  const st=T.steps[T.idx], young=T.g==='y', A=AGES[T.g];
+  const e = st.type==='rest' ? st.next : st.e;
+  const exNo = st.type==='rest' ? st.nextI+1 : st.i+1, setNo = st.type==='rest' ? st.nextSet : st.set;
+  $('#tWhere').textContent = `Упражнение ${exNo} из ${T.list.length} · подход ${setNo} из ${A.sets}`;
+  const labels={prep:'Приготовься', work:'Выполняй', switch:'Смена стороны', rest:'Отдых'};
+  let doseHtml='';
+  if(st.type==='work'){
+    doseHtml = st.reps ? `<p class="dose-big">${st.reps} ${plural(st.reps,['раз','раза','раз'])}<small>примерно ${st.dur} сек · нажми «Готово», когда закончишь</small></p>`
+                       : `<p class="dose-big">Держи ${st.dur} сек${e.alt?'<small>двигайся в своём темпе</small>':''}</p>`;
+  } else if(st.type==='switch'){
+    doseHtml = `<p class="dose-big">Поменяй ${e.sideLabel?'ногу':'сторону'}<small>дальше сторона 2 из 2</small></p>`;
+  } else if(st.type==='prep'){
+    const d=doseText(e,T.g); doseHtml=`<p class="dose-big">${d.main}${d.sub?`<small>${d.sub}</small>`:''}</p>`;
+  } else {
+    const d=doseText(e,T.g); doseHtml=`<p class="dose-big">Отдохни и выпей воды<small>дальше: ${d.main}${d.sub?' '+d.sub:''}</small></p>`;
+  }
+  const sideBadge = (st.type==='work' && st.side) ? `<span class="side-badge">Сторона ${st.side} из 2</span>` : '';
+  $('#tStage').innerHTML = `
+    <div class="t-fig ${st.type==='work'?'working':''}">${sideBadge}${figSvg(e,T.p.zone)}</div>
+    <div class="t-info">
+      <p class="phase ph-${st.type}">${labels[st.type]}</p>
+      ${st.type==='rest'?'<p class="next-l">Дальше</p>':''}
+      ${young?`<p class="t-game">${esc(e.game)}</p>`:''}
+      <h2>${esc(e.name)}</h2>
+      <div class="ring-row">
+        <div class="ring ${st.type==='rest'?'ph-rest-ring':''}"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="trk" cx="60" cy="60" r="52"/><circle class="val" id="tRing" cx="60" cy="60" r="52" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/></svg><b id="tNum">${st.dur}</b></div>
+        ${doseHtml}
+      </div>
+      ${st.type==='work'&&st.reps?'<div><button class="btn primary big" id="tDone" type="button">Готово</button></div>':''}
+      <ol class="t-steps">${e.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
+      <p class="cue"><b>Следи:</b> ${esc(e.cue)}</p>
+    </div>`;
+  const d=$('#tDone'); if(d) d.addEventListener('click', ()=>go(T.idx+1));
+  updateTimer();
+}
+function updateTimer(){
+  const st=T.steps[T.idx], total=st.dur*1000, frac=Math.max(0,T.rem)/total;
+  const n=$('#tNum'), r=$('#tRing');
+  if(n) n.textContent = T.waiting ? '✓' : Math.ceil(Math.max(0,T.rem)/1000);
+  if(r) r.setAttribute('stroke-dashoffset', String(CIRC*(1-frac)));
+  $('#tBar').style.width = ((T.idx + (1-frac))/T.steps.length*100).toFixed(2)+'%';
+  const f=$('#tStage .fig');
+  if(f && st.type==='work' && st.e.pose2 && (st.e.alt || st.reps)){
+    const half=(st.e.tempo||2)/2*1000, el=total-T.rem;
+    f.dataset.f = String(Math.floor(el/half)%2);
+  }
+}
+function tick(){
+  const now=performance.now(), dt=now-T.last; T.last=now;
+  if(!T.active || T.paused || T.waiting || T.confirm) return;
+  T.rem-=dt;
+  const st=T.steps[T.idx], sec=Math.ceil(T.rem/1000);
+  if(sec!==T.lastSec){ T.lastSec=sec; if(sec>=1 && sec<=3 && !st.reps) beep(620,.09); }
+  if(T.rem<=0){
+    if(st.type==='work' && st.reps){ T.rem=0; T.waiting=true; const d=$('#tDone'); if(d){ d.classList.add('pulse'); } beep(880,.2); updateTimer(); return; }
+    go(T.idx+1); return;
+  }
+  updateTimer();
+}
+function setPaused(v){
+  T.paused=v; $('#tPause').textContent = v?'Продолжить':'Пауза';
+  const f=$('#tStage .t-fig'); if(f) f.style.animationPlayState=v?'paused':'';
+}
+function syncSound(){
+  const b=$('#tSound'); b.setAttribute('aria-pressed', String(prefs.sound));
+  b.setAttribute('aria-label', prefs.sound?'Звук включён':'Звук выключен');
+  $('#tSoundWaves').style.display = prefs.sound?'':'none';
+}
+function openConfirm(){ if(!T||!T.active) return; T.confirm=true; $('#tConfirm').hidden=false; $('#tStay').focus(); }
+function closeConfirm(){ T.confirm=false; T.last=performance.now(); $('#tConfirm').hidden=true; $('#tPause').focus(); }
+function closeTrainer(){
+  if(T){ clearInterval(T.int); unwake(); T.active=false; }
+  $('#tConfirm').hidden=true; $('#trainer').hidden=true; document.body.style.overflow='';
+  T=null; if(lastFocus) lastFocus.focus();
+}
+function finish(){
+  clearInterval(T.int); unwake(); T.active=false;
+  $('#tBar').style.width='100%';
+  beep(660,.12); setTimeout(()=>beep(880,.12),140); setTimeout(()=>beep(1175,.25),280);
+  const mins=Math.max(1,Math.round(T.steps.reduce((a,s)=>a+s.dur,0)/60));
+  $('#tWhere').textContent='Тренировка завершена';
+  $('#tControls').hidden=true; $('#tKbd').hidden=true;
+  $('#tStage').innerHTML = `<div class="finish">
+    <p class="eyebrow">Готово</p>
+    <h2>${T.g==='y'?'Молодец! ':''}Тренировка завершена</h2>
+    <p class="sum">${esc(T.p.name)} · ${T.list.length} ${plural(T.list.length,['упражнение','упражнения','упражнений'])} · около ${mins} мин</p>
+    ${feelForm('fin')}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+      <button class="btn primary" id="finSave" type="button">Записать в дневник</button>
+      <button class="btn ghost" id="finSkip" type="button">Закрыть без записи</button>
+    </div></div>`;
+  $('#finSave').addEventListener('click', ()=>{
+    const p=T.p;
+    addEntry(Object.assign({date:iso(new Date()), programId:p.id, zone:p.zone, age:T.g, mode:'timer'}, readFeel('fin')));
+    closeTrainer(); toast('Занятие записано в дневник');
+    document.getElementById('diary').scrollIntoView();
+  });
+  $('#finSkip').addEventListener('click', closeTrainer);
+  $('#finSave').focus();
+}
+
+$('#tPause').addEventListener('click', ()=>setPaused(!T.paused));
+$('#tNext').addEventListener('click', ()=>go(T.idx+1));
+$('#tPrev').addEventListener('click', ()=>{
+  const st=T.steps[T.idx];
+  if(st.dur*1000 - T.rem > 2000 || T.idx===0) go(T.idx); else go(T.idx-1);
+});
+$('#tSound').addEventListener('click', ()=>{ prefs.sound=!prefs.sound; savePrefs(); syncSound(); beep(880,.08); });
+$('#tClose').addEventListener('click', ()=>{ if(T && T.active) openConfirm(); else closeTrainer(); });
+$('#tStay').addEventListener('click', closeConfirm);
+$('#tQuit').addEventListener('click', closeTrainer);
+
+/* ---------- События ---------- */
+document.addEventListener('click', ev=>{
+  const b=ev.target.closest('button'); if(!b) return;
+  if(b.dataset.age){ prefs.age=b.dataset.age; savePrefs(); renderCatalog(); }
+  else if(b.dataset.zoneBtn){ prefs.zone=b.dataset.zoneBtn; savePrefs(); renderCatalog(); }
+  else if(b.dataset.start){ startTraining(b.dataset.start); }
+  else if(b.dataset.mark!==undefined){ openMark(b.dataset.mark); }
+  else if(b.hasAttribute('data-close-modal')){ closeMark(); }
+  else if(b.dataset.del){
+    const li=b.closest('.entry');
+    const row=document.createElement('div'); row.className='confirm-row';
+    row.innerHTML=`<span>Удалить эту запись?</span><button class="btn danger small" type="button" data-del-yes="${b.dataset.del}">Удалить</button><button class="btn ghost small" type="button" data-del-no>Отмена</button>`;
+    b.hidden=true; li.appendChild(row); row.querySelector('[data-del-no]').focus();
+  }
+  else if(b.dataset.delYes){ log=log.filter(e=>e.id!==b.dataset.delYes); saveLog(); renderDiary(); toast('Запись удалена'); }
+  else if(b.hasAttribute('data-del-no')){ const li=b.closest('.entry'); li.querySelector('.del').hidden=false; b.closest('.confirm-row').remove(); li.querySelector('.del').focus(); }
+});
+document.addEventListener('change', ev=>{
+  const t=ev.target; if(t.id && t.id.endsWith('-pain')){ const h=document.getElementById(t.id.replace('-pain','-hint')); if(h) h.hidden=!t.checked; }
+});
+$('#markModal').addEventListener('click', ev=>{ if(ev.target.id==='markModal') closeMark(); });
+document.addEventListener('keydown', ev=>{
+  if(!$('#markModal').hidden && ev.key==='Escape'){ closeMark(); return; }
+  if(!T) return;
+  if(ev.key==='Escape'){ ev.preventDefault(); if(T.confirm) closeConfirm(); else if(T.active) openConfirm(); else closeTrainer(); }
+  else if(ev.key===' ' && T.active && !T.confirm){
+    const tag=(ev.target.tagName||'').toLowerCase(); if(tag==='textarea'||tag==='input') return;
+    ev.preventDefault(); setPaused(!T.paused);
+  }
+});
+
+/* ---------- Старт ---------- */
+(function init(){
+  $('#heroBack').innerHTML = figSvg(EX.birdDog,'back') + `<figcaption><span>Птица-собака</span><b>Спина</b></figcaption>`;
+  $('#heroLegs').innerHTML = figSvg(EX.singleLeg,'legs') + `<figcaption><span>Цапля</span><b>Ноги</b></figcaption>`;
+  $('#freq').innerHTML = Object.values(AGES).map(a=>`<tr><td>${a.label}</td><td>${a.sets}</td><td>${a.rest} сек</td><td>${a.dur}</td><td>${a.freq}</td><td>${a.how}</td></tr>`).join('');
+  renderCatalog(); renderDiary();
+})();
+</script>
+</body>
+</html>
